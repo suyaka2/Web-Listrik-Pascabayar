@@ -601,8 +601,11 @@ class Admin extends BaseController
             $meter_awal = $this->request->getPost('meter_awal');
             $meter_akhir = $this->request->getPost('meter_akhir');
         // $password = $this->request->getPost('password');
+        // dd($this->request->getPost());
 
-         list($tahun, $bulan) = explode('-', $periode);
+        $periodeFull = $periode . '-01'; // Tambahkan '-01' untuk membuat format tanggal lengkap
+        
+        //  list($tahun, $bulan) = explode('-', '.', $periode);
          // --- BAGIAN PENTING: PROSES PERHITUNGAN ---
 
         // 3. Hitung jumlah meter yang digunakan
@@ -631,39 +634,39 @@ class Admin extends BaseController
                 }
 
                 
-                // $tagihan = $modelTagihan->autoNumber()->getRowArray();
-                // if(!$tagihan){
-                //     $id_tagihan = "TGH001";
-                // }
-                // else{
-                //     $kode = $tagihan['id_tagihan'];
-                //     $noUrut = (int) substr($kode, -3);
-                //     $noUrut++;
-                //     $id_tagihan = "TGH".sprintf("%03s", $noUrut);
-                // }
+                $tagihan = $modelTagihan->autoNumber()->getRowArray();
+                if(!$tagihan){
+                    $id_tagihan = "TGH001";
+                }
+                else{
+                    $kode = $tagihan['id_tagihan'];
+                    $noUrut = (int) substr($kode, -3);
+                    $noUrut++;
+                    $id_tagihan = "TGH".sprintf("%03s", $noUrut);
+                }
             $dataSimpan = [
                 'id_penggunaan' => $id,
                 'id_pelanggan' => $nama,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
+                'bulan' => $periodeFull,
+                'tahun' => $periodeFull,
                 'meter_awal' => $meter_awal,
                 'meter_akhir' => $meter_akhir,
             ];
 
-            // $dataSimpan_Tagihan = [
-            //     'id_tagihan' => $id_tagihan,
-            //     'id_penggunaan' => $id,
-            //     'id_pelanggan' => $nama,
-            //     'bulan' => $bulan,
-            //     'tahun' => $tahun,
-            //     'jumlah_meter' => $jumlah_meter,
-            //     'status' => 'Belum Lunas',
-            // ];
+            $dataSimpan_Tagihan = [
+                'id_tagihan' => $id_tagihan,
+                'id_penggunaan' => $id,
+                'id_pelanggan' => $nama,
+                'bulan' => $periodeFull,
+                'tahun' => $periodeFull,
+                'jumlah_meter' => $jumlah_meter,
+                'status' => 'Belum Lunas',
+            ];
              
     
 
             $modelPenggunaan->saveDataPenggunaan($dataSimpan);
-            // $modelTagihan->saveDataTagihan($dataSimpan_Tagihan);
+            $modelTagihan->saveDataTagihan($dataSimpan_Tagihan);
             session()->setFlashdata('success', "Data Penggunaan & Tagihan Berhasil Ditambahkan!");
             ?>
             <script>
@@ -780,10 +783,11 @@ class Admin extends BaseController
     } else {
         $modelTagihan = new M_Tagihan;
         $modelPenggunaan = new M_Penggunaan;
-
+        
         // Ambil semua data dari form
         $idUpdate = $this->request->getPost('id_penggunaan');
         $idUpdate2 = $this->request->getPost('id_tagihan');
+        // dd($idUpdate2, $dataTagihan); 
         $periode = $this->request->getPost('edit_periode');
         $meter_awal = $this->request->getPost('edit_meter_awal');
         $meter_akhir = $this->request->getPost('edit_meter_akhir');
@@ -821,7 +825,6 @@ class Admin extends BaseController
             $dataTagihan['tahun'] = $tahun;
         }
 
-        // dd($idUpdate2, $dataTagihan); 
 
         // 4. JALANKAN UPDATE KE KEDUA TABEL
         $modelPenggunaan->updateDataPenggunaan($dataPenggunaan, ['id_penggunaan' => $idUpdate]);
@@ -930,6 +933,7 @@ class Admin extends BaseController
             $halaman = $uri->getSegment(2);
             $data['halaman'] = $halaman;
             $title['title'] = "Data Tagihan Listrik";
+            // dd($data['data_tagihan']);
 
             echo view('Template/sidebar', $data);
             echo view('Template/header', $title);

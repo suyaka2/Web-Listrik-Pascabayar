@@ -26,17 +26,18 @@ class M_Penggunaan extends Model
     {
         if ($where === false) {
             $builder = $this->db->table($this->table);
-            $builder->select('*');
+            // $builder->select('*');
+            $builder->select('penggunaan.*, pelanggan.nama_pelanggan, pelanggan.alamat, tagihan.id_tagihan, tagihan.jumlah_meter, tagihan.status');
             $builder->join('pelanggan','pelanggan.id_pelanggan = penggunaan.id_pelanggan','LEFT');
-            // Di dalam Model M_Penggunaan
             $builder->join('tagihan', 'tagihan.id_penggunaan = penggunaan.id_penggunaan', 'left');
             $builder->orderBy('penggunaan.bulan','ASC');
             return $query = $builder->get();
         } else {
             $builder = $this->db->table($this->table);
-            $builder->select('*');
+            $builder->select('penggunaan.*, pelanggan.nama_pelanggan, pelanggan.alamat, tagihan.id_tagihan, tagihan.jumlah_meter, tagihan.status');
+            
+            // $builder->select('*');
             $builder->where($where);
-            // Di dalam Model M_Penggunaan
             $builder->join('tagihan', 'tagihan.id_penggunaan = penggunaan.id_penggunaan', 'left');
             $builder->join('pelanggan','pelanggan.id_pelanggan = penggunaan.id_pelanggan','LEFT');
             $builder->orderBy('penggunaan.bulan','ASC');

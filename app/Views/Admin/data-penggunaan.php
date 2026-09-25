@@ -145,14 +145,17 @@
                       <?php
                             $no = 0;
                             foreach($data_penggunaan as $data) {
+                      //  dd($data);
+
                             ?>
                       <tr>
+                        
                         <td><?= $no=$no+1;?></td>
                         <td><?= $data['nama_pelanggan'];?></td>
                         <td>
     <?php
         // 1. Membuat objek tanggal dari angka bulan dan tahun yang Anda miliki
-        $tanggalObj = new DateTime($data['tahun'] . '-' . $data['bulan'] . '-01');
+        $tanggalObj = new DateTime($data['bulan']);
 
         // 2. Membuat formatter untuk mengubahnya ke format Bahasa Indonesia
         $formatter = new IntlDateFormatter(
@@ -181,6 +184,7 @@
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
+
                              <a class="dropdown-item btn-edit-penggunaan" href="#" 
     data-bs-toggle="modal" 
     data-bs-target="#editModal" 
@@ -192,9 +196,9 @@
     data-bs-meter_akhir="<?= $data['meter_akhir'] ?>"
     data-bs-id_pelanggan="<?= $data['id_pelanggan'] ?>">
     <i class="bx bx-edit-alt me-1"></i> Edit
-</a>
-                                
-                              
+</a>  
+
+                                                              
                                <a class="dropdown-item" href="#" onclick="doDelete('<?= $data['id_penggunaan']; ?>')"
                                 ><i class="bx bx-trash me-1"></i> Delete</a
                               >
@@ -357,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then((ok) => {
             if (ok) {
-                window.location.href = '<?= base_url() ?>/admin/hapus-data-penggunaan/' + idDelete;
+                window.location.href = '<?= base_url() ?>/hapus-data-penggunaan/' + idDelete;
             }
         });
     }

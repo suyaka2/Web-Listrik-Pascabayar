@@ -13,6 +13,7 @@ class Login extends BaseController
 
     public function form_login(){
         // $title = "Login Pelanggan";
+
         return view('/Login/login-pelanggan');
     }
     public function login_admin(){
@@ -105,6 +106,7 @@ class Login extends BaseController
     // Langkah 1: Cek di tabel 'user' terlebih dahulu, bukan 'pelanggan'
     $where = ['user.username' => $username];
     $dataUser = $modelUser->getDataUserJoin( $where)->getRowArray();
+        // dd($dataUser);
 
     // Jika username tidak ada di tabel user sama sekali
     if (!$dataUser) {

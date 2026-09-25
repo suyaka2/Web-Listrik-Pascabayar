@@ -94,16 +94,25 @@
     <?php
     $no = 0;
     foreach($data_tagihan as $data) {
-      // --- LAKUKAN PROSES PENERJEMAHAN DI SINI ---
-        // 1. Buat objek tanggal dari angka bulan dan tahun
-        $tanggalObj = new DateTime($data['tahun'] . '-' . $data['bulan'] . '-01');
-        // 2. Siapkan "penerjemah" ke Bahasa Indonesia
-        $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMMM');
-        // 3. Simpan hasilnya ke variabel
-        $periode_teks = $formatter->format($tanggalObj) . ' ' . $data['tahun'];
+      // Cek dulu apakah data bulannya kosong atau NULL
+if (empty($data['bulan'])) {
+    
+    // 1. Kalau kosong, JANGAN jalankan DateTime. 
+    // Langsung aja kasih nilai default.
+    $periode_teks = "Belum ada periode";
+
+} else {
+
+    // 2. Kalau bulannya ADA ISINYA, baru jalankan kodingan asli lu di sini
+    $tanggalObj = new DateTime($data['bulan']);
+    $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMMM');
+    $periode_teks = $formatter->format($tanggalObj) . ' ' . $data['tahun'];
+
+}
+   
       
     ?>
-    
+  
     <tr>
         <td><?= $no=$no+1;?></td>
         <td><?= $data['nama_pelanggan'];?></td>
